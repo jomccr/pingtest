@@ -14,7 +14,7 @@ def setup_log():
         pass
 
     date = datetime.today().strftime('%Y-%m-%d')
-    logging.basicConfig(filename='log/pingtest-' + date + '.log', level=logging.INFO)
+    logging.basicConfig(filename='log/pingtest-' + date + '.log', level=logging.WARNING)
 
 def main():
     urls = [ # added IP addresses to see if DNS-only issue
@@ -23,7 +23,7 @@ def main():
             {'hostname':'http://netgear.com', 'ip':'http://13.248.140.194' },
             {'hostname':'http://python.org', 'ip':'http://45.55.99.72' },
             {'hostname':'http://yahoo.com', 'ip':'http://72.30.35.9' },
-            {'hostname':'http://imgur.com','ip':'http://151.101.56.193' },
+            {'hostname':'http://imgur.com','ip':'http://151.101.56.193' }
         ]
 
     s = requests.Session()
@@ -38,17 +38,17 @@ def main():
                 logging.info(' {} : connected to {} successfully'.format(timestamp, target['hostname']))
 
             except Exception as e:
-                logging.warning(' {} : could not connect to {} trying IP address'.format(timestamp, target['hostname']))
-                logging.warning(' {} : Error message : {}'.format(timestamp, e))
+                logging.error(' {} : could not connect to {} trying IP address'.format(timestamp, target['hostname']))
+                logging.error(' {} : Error message : {}'.format(timestamp, e))
 
                 # next, try the IP directly
                 try: 
                     r = s.get(url=target['ip'], stream=False)
-                    logging.info(' {} :\t Connected to {} successfully'.format(timestamp, target['ip']))
+                    logging.warning(' {} : Connected to {} successfully but {} failed'.format(timestamp, target['ip'], target['hostname']))
                 except Exception as e: 
-                    logging.warning(' {} :\t Error - could not connect to hostname or IP: {}'.format(timestamp, e))
+                    logging.error(' {} : Error - could not connect to hostname or IP: {}'.format(timestamp, e))
 
-            sleep(30)
+            sleep(15) 
 
 if __name__ == '__main__':
     setup_log()
