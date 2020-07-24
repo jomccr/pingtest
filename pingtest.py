@@ -11,19 +11,22 @@ def setup_log():
     try: 
         os.mkdir(os.path.join(cwd, 'log'))
     except FileExistsError as e: 
-        pass
+        # don't worry if the directory already exists
+        # but if there's some other error it will fail
+        pass 
 
     date = datetime.today().strftime('%Y-%m-%d')
     logging.basicConfig(filename='log/pingtest-' + date + '.log', level=logging.WARNING)
 
 def main():
     urls = [ # added IP addresses to see if DNS-only issue
+            {'hostname':'http://imgur.com','ip':'http://151.101.56.193' },
+            {'hostname':'http://linkedin.com', 'ip':'http://108.174.10.10'},
+            {'hostname':'http://python.org', 'ip':'http://45.55.99.72' },
+            {'hostname':'http://yahoo.com', 'ip':'http://72.30.35.9' },
             {'hostname':'http://google.com', 'ip':'http://64.233.177.102'} ,
             {'hostname':'http://reddit.com', 'ip':'http://151.101.65.140' },
             {'hostname':'http://netgear.com', 'ip':'http://13.248.140.194' },
-            {'hostname':'http://python.org', 'ip':'http://45.55.99.72' },
-            {'hostname':'http://yahoo.com', 'ip':'http://72.30.35.9' },
-            {'hostname':'http://imgur.com','ip':'http://151.101.56.193' }
         ]
 
     s = requests.Session()
