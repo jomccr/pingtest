@@ -1,6 +1,7 @@
 import os
 import requests
 import logging
+import argparse
 from datetime import datetime
 from time import sleep 
 
@@ -21,7 +22,6 @@ def setup_log():
 def main():
     urls = [ # added IP addresses to see if DNS-only issue
             {'hostname':'http://imgur.com','ip':'http://151.101.56.193' },
-            {'hostname':'http://linkedin.com', 'ip':'http://108.174.10.10'},
             {'hostname':'http://python.org', 'ip':'http://45.55.99.72' },
             {'hostname':'http://yahoo.com', 'ip':'http://72.30.35.9' },
             {'hostname':'http://google.com', 'ip':'http://64.233.177.102'} ,
@@ -30,6 +30,15 @@ def main():
         ]
 
     s = requests.Session()
+
+    parser = argparse.ArgumentParser(description='Ping a set of hosts and log if one cannot be reached.')
+    parser.add_argument('--sleep', type=int, help='number of seconds to sleep between pings')
+    args = parser.parse_args()
+
+    if args.sleep: 
+        SLEEP = args.sleep 
+    else:
+        SLEEP = 15 
 
     while True: 
         for target in urls: 
@@ -51,7 +60,7 @@ def main():
                 except Exception as e: 
                     logging.error(' {} : Error - could not connect to hostname or IP: {}'.format(timestamp, e))
 
-            sleep(15) 
+            sleep(SLEEP) 
 
 if __name__ == '__main__':
     setup_log()
